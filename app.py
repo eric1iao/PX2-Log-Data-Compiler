@@ -81,16 +81,5 @@ if st.button("Merge and Filter Logs"):
             st.success(f"Merged and filtered {len(result_df)} log entries.")
             st.dataframe(result_df.head(100))
 
-            # Create downloadable Excel file
-            output = io.BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                result_df.to_excel(writer, index=False, sheet_name='Filtered Logs')
-            output.seek(0)
-
-            st.download_button(
-                label="📥 Download as Excel",
-                data=output,
-                file_name="filtered_log.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+            
 
