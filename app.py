@@ -75,7 +75,7 @@ tool_id = st.text_input("Tool ID (optional)", value="")
 # Log levels multi-select
 log_levels = st.multiselect(
     "Select Log Levels (optional)",
-    options=["DBG", "INF", "ERR", "WRN"],  # Add more log levels as needed
+    options=["ERR", "INF", "DBG"],  # Specified log levels
     default=["INF"]  # Default selection
 )
 
