@@ -57,37 +57,8 @@ def merge_and_filter_logs(files, start_time_str, end_time_str, tool_id, log_leve
 
     return df
 
-# UI
-st.set_page_config(page_title="Log Merger", layout="centered")
-st.title("🔧 Merge & Filter Log Files")
-st.markdown("Upload **two log files** to merge and filter them by time, tool ID, and log levels. Output is downloadable as Excel.")
-
-uploaded_files = st.file_uploader("Upload two log files", type=["txt", "log"], accept_multiple_files=True)
-
-col1, col2 = st.columns(2)
-with col1:
-    start_time = st.text_input("Start Time (HH:MM:SS)", value="")
-with col2:
-    end_time = st.text_input("End Time (HH:MM:SS)", value="")
-
-tool_id = st.text_input("Tool ID (optional)", value="")
-
-# Log levels multi-select
-log_levels = st.multiselect(
-    "Select Log Levels (optional)",
-    options=["ERR", "INF", "DBG"],  # Specified log levels
-    default=["INF"]  # Default selection
-)
-
-if st.button("Merge and Filter Logs"):
-    if not uploaded_files or len(uploaded_files) != 2:
-        st.error("Please upload exactly two log files.")
-    else:
-        with st.spinner("Processing logs..."):
-            result_df = merge_and_filter_logs(uploaded_files, start_time, end_time, tool_id, log_levels)
-
-        if result_df.empty:
-            st.warning("No matching log entries found.")
-        else:
-            st.success(f"Merged and filtered {len(result_df)} log entries.")
-            st.dataframe(result_df.head(100))
+def download_link(df):
+    """Generates a download link for the DataFrame as a CSV file."""
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # Convert to base64
+    return f'<a href="data:file/csv;base64,{b64}" download="filtered
