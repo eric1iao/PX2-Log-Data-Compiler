@@ -93,3 +93,4 @@ if st.button("Merge and Filter Logs"):
                 file_name="filtered_log.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+
