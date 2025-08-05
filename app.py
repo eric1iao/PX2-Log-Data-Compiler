@@ -20,7 +20,7 @@ def parse_log_file(uploaded_file, source_label):
                 continue
     return entries
 
-def merge_and_filter_logs(files, start_time_str, end_time_str, tool_id):
+def merge_and_filter_logs(files, start_time_str, end_time_str, tool_id, log_level):
     if len(files) != 2:
         return pd.DataFrame(columns=["Timestamp", "Message", "Source"])
 
@@ -51,12 +51,16 @@ def merge_and_filter_logs(files, start_time_str, end_time_str, tool_id):
     if tool_id:
         df = df[df["Message"].str.contains(tool_id, case=False, na=False)]
 
+    # Filter by log level if provided
+    if log_level:
+        df = df[df["Message"].str.contains(f'\\[{log_level}\\]', case=False, na=False)]
+
     return df
 
 # UI
 st.set_page_config(page_title="Log Merger", layout="centered")
 st.title("🔧 Merge & Filter Log Files")
-st.markdown("Upload **two log files** to merge and filter them by time and tool ID. Output is downloadable as Excel.")
+st.markdown("Upload **two log files** to merge and filter them by time, tool ID, and log level. Output is downloadable as Excel.")
 
 uploaded_files = st.file_uploader("Upload two log files", type=["txt", "log"], accept_multiple_files=True)
 
@@ -68,18 +72,18 @@ with col2:
 
 tool_id = st.text_input("Tool ID (optional)", value="")
 
+# Log level selection
+log_level = st.selectbox("Log Level (optional)", options=["", "INF", "DBG", "ERR"])
+
 if st.button("Merge and Filter Logs"):
     if not uploaded_files or len(uploaded_files) != 2:
         st.error("Please upload exactly two log files.")
     else:
         with st.spinner("Processing logs..."):
-            result_df = merge_and_filter_logs(uploaded_files, start_time, end_time, tool_id)
+            result_df = merge_and_filter_logs(uploaded_files, start_time, end_time, tool_id, log_level)
 
         if result_df.empty:
             st.warning("No matching log entries found.")
         else:
             st.success(f"Merged and filtered {len(result_df)} log entries.")
             st.dataframe(result_df.head(100))
-
-            
-
