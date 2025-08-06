@@ -60,7 +60,7 @@ def merge_and_filter_logs(files, start_time_str, end_time_str, tool_id, log_leve
 # UI
 st.set_page_config(page_title="Log Merger", layout="centered")
 st.title("🔧 Merge & Filter Log Files")
-st.markdown("Upload **two log files** to merge and filter them by time, tool ID, and log levels. Output is downloadable as Excel.")
+st.markdown("Upload **two log files** to merge and filter them by time, tool ID, and log levels. Output is downloadable as CSV.")
 
 uploaded_files = st.file_uploader("Upload two log files", type=["txt", "log"], accept_multiple_files=True)
 
@@ -91,4 +91,5 @@ if st.button("Merge and Filter Logs"):
         else:
             st.success(f"Merged and filtered {len(result_df)} log entries.")
             st.dataframe(result_df.head(100))
+
 
